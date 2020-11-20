@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
-    public class Employee
+    public class Employee : BaseEntity
     {
         
-        public int Id { get; set; }
         [StringLength(30)]
         public string FirstName { get; set; }
         [StringLength(30)]
