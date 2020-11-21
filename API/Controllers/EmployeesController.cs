@@ -14,30 +14,24 @@ namespace API.Controllers
   [Route("api/[controller]")]
   public class EmployeesController : ControllerBase
   {
-    private readonly IEmployeeRepository _repo;
-    public EmployeesController(IEmployeeRepository repo)
+    private readonly IGenericRepository<Employee> _repo;
+    public EmployeesController(IGenericRepository<Employee> repo)
     {
       _repo = repo;
-
 
     }
 
     [HttpGet]
-    // public ActionResult<List<Employee>> GetEmployees()
-    // {
-    //   var employees = _context.Employees.ToList();
-    //   return Ok(employees);
-    // }
     public async Task<ActionResult<List<Employee>>> GetEmployees()
     {
-      var employees = await _repo.GetEmployeesAsync();
+      var employees = await _repo.ListAllAsync();
       return Ok(employees);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Employee>> GetEmployee(int id)
     {
-      return Ok(await _repo.GetEmployeeByIdAsync(id));
+      return Ok(await _repo.GetByIdAsync(id));
     }
   }
 }
