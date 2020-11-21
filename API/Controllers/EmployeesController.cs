@@ -10,9 +10,7 @@ using Core.Interfaces;
 
 namespace API.Controllers
 {
-  [ApiController]
-  [Route("api/[controller]")]
-  public class EmployeesController : ControllerBase
+  public class EmployeesController : BaseApiController
   {
     private readonly IGenericRepository<Employee> _repo;
     public EmployeesController(IGenericRepository<Employee> repo)
