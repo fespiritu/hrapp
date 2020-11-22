@@ -13,21 +13,21 @@
           <th>Date of Birth</th>
           <th>Date of Joining</th>
           <th>IsActive</th>
-          <th colspan=2></th>
+          <!-- <th colspan=2></th> -->
         </thead>
         <tbody>
           <tr *ngFor="let emp of Employees">
-            <td>{{emp.Name}}</td>
-            <td>{{emp.ID}}</td>
-            <td>{{emp.Address}}</td>
-            <td>{{emp.Role}}</td>
-            <td>{{emp.Department}}</td>
-            <td>{{emp.SkillSets}}</td>
-            <td>{{emp.DateOfBirth | date:"M/d/y"}}</td>
-            <td>{{emp.DateOfJoining | date:"M/d/y"}}</td>
-            <td>{{emp.IsActive}}</td>
-            <td><button id="btnEdit" name="btnEdit" (click)="onEdit($event)"><i class="fa fa-edit"></i></button></td>
-            <td><button id="btnDelete" name="btnDelete"  (click)="onDelete($event)"><i class="fa fa-trash red"></i></button></td>
+            <td>{{emp.firstName}}</td>
+            <td>{{emp.id}}</td>
+            <td>{{emp.address1}}</td>
+            <td>{{emp.role}}</td>
+            <td>{{emp.department}}</td>
+            <td>{{emp.skillSets}}</td>
+            <td>{{emp.dateOfBirth | date:"M/d/y"}}</td>
+            <td>{{emp.dateOfJoining | date:"M/d/y"}}</td>
+            <td>{{emp.isActive}}</td>
+            <!-- <td><button id="btnEdit" name="btnEdit" (click)="onEdit($event)"><i class="fa fa-edit"></i></button></td>
+            <td><button id="btnDelete" name="btnDelete"  (click)="onDelete($event)"><i class="fa fa-trash red"></i></button></td> -->
           </tr>
         </tbody>
       </table>

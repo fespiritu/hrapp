@@ -14,3 +14,15 @@ export interface IEmployeeApi {
   dateOfJoining: string;
   isActive: boolean;
 }
+
+export interface IEmployee{
+  ID: number;
+  Name: string;
+  Address: string;
+  Role: string;
+  Department: string;
+  SkillSets: string;
+  DateOfBirth: Date;
+  DateOfJoining: Date;
+  IsActiveDisplay: string;
+};

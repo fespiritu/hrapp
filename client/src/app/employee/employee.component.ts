@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { IEmployee } from '../models/employee';
+import { EmployeeService } from './employee.service';
+import { IEmployeeApi } from './../models/employee';
 
 @Component({
   selector: 'app-employee',
@@ -8,18 +10,30 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EmployeeComponent implements OnInit {
 
+  // employees!: IEmployee[];
+  Employees!: IEmployeeApi[];
 
-  constructor(private http: HttpClient) {
+
+  constructor(private employeeService: EmployeeService) {
 
   }
 
   ngOnInit(): void {
-    this.http.get('https://localhost:5001/api/employees').subscribe((response: any) => {
-      console.log(response);
+    this.employeeService.getEmployees().subscribe(response => {
+      this.Employees = response;
+      console.log('this.employees: ', this.Employees);
     }, error => {
       console.log('error: ', error);
     });
   }
+
+  // onEdit($event) {
+  //   console.log('Hello onEdit: ', $event.target.name);
+  // }
+
+  // onDelete($event) {
+  //   console.log('Hello onDelete: ',  $event.target.name);
+  // }
 
 
 
