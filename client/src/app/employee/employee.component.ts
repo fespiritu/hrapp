@@ -11,8 +11,20 @@ import { IEmployeeApi } from './../models/employee';
 export class EmployeeComponent implements OnInit {
 
   // employees!: IEmployee[];
-  Employees!: IEmployeeApi[];
 
+  columnDefs = [
+    { headerName: 'ID', field: 'id' },
+    { headerName: 'Name', field: 'firstName' },
+    { headerName: 'Address', field: 'address1' },
+    { headerName: 'Role', field: 'role' },
+    { headerName: 'Department', field: 'department' },
+    { headerName: 'SkillSets', field: 'skillSets' },
+    { headerName: 'Date of Birth', field: 'dateOfBirth' },
+    { headerName: 'Date of Joining', field: 'dateOfJoining' },
+    { headerName: 'Is Active', field: 'isActive' }
+  ];
+
+  rowData!: any[]; // IEmployeeApi[]; // IEmployeeApi[];
 
   constructor(private employeeService: EmployeeService) {
 
@@ -20,8 +32,9 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeService.getEmployees().subscribe(response => {
-      this.Employees = response;
-      console.log('this.employees: ', this.Employees);
+      console.log('response: ', response);
+      this.rowData = response;
+      console.log('this.employees: ', this.rowData);
     }, error => {
       console.log('error: ', error);
     });
