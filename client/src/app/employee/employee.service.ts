@@ -15,4 +15,9 @@ export class EmployeeService {
     return this.http.get<IEmployeeApi[]>(this.baseUrl + 'employees');
 
   }
+
+  deleteEmployees(idCsv: string): string {
+    console.log('service deleteEmployees: ', idCsv);
+    return 'Hello';
+  }
 }
