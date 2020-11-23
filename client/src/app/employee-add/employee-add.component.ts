@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EmployeeService } from '../employee/employee.service';
+import { Employee } from './../employee';
 
 @Component({
   selector: 'app-employee-add',
@@ -11,7 +13,8 @@ export class EmployeeAddComponent implements OnInit {
 
   addEmployee!: FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private formBuilder: FormBuilder,
+              private employeeService: EmployeeService) { }
 
   ngOnInit(): void {
     this.addEmployee = new FormGroup({
@@ -35,6 +38,7 @@ export class EmployeeAddComponent implements OnInit {
   get firstName(): any { return this.addEmployee.get('firstName'); }
   get lastName(): any { return this.addEmployee.get('lastName'); }
   get address1(): any { return this.addEmployee.get('address1'); }
+  get address2(): any { return this.addEmployee.get('address2'); }
   get city(): any { return this.addEmployee.get('city'); }
   get state(): any { return this.addEmployee.get('state'); }
   get zipCode(): any { return this.addEmployee.get('zipCode'); }
@@ -42,9 +46,43 @@ export class EmployeeAddComponent implements OnInit {
   get department(): any { return this.addEmployee.get('department'); }
   get skillSets(): any { return this.addEmployee.get('skillSets'); }
 
+  get dateOfBirth(): any { return this.addEmployee.get('dateOfBirth'); }
+  get dateOfJoining(): any { return this.addEmployee.get('dateOfJoining'); }
+  get isActive(): any { return this.addEmployee.get('isActive'); }
+
   onSubmitClick(): void {
     // this.addEmployee['submitted'] = true;
     console.log('this.addEmployee : ', this.addEmployee );
+    const employee = new Employee(
+      this.firstName.value,
+      this.lastName.value,
+       this.address1.value,
+      this.address2.value,
+      this.city.value,
+       this.state.value,
+      this.zipCode.value,
+      this.role.value,
+      this.department.value,
+      this.skillSets.value,
+      this.dateOfBirth.value,
+      this.dateOfJoining.value,
+      this.isActive.value
+    );
+    // employee.firstName = this.firstName.value;
+    // employee.lastName = this.lastName.value;
+    // employee.address1 = this.address1.value;
+    // employee.address2 = this.address2.value;
+    // employee.city = this.city.value;
+    // employee.state = this.state.value;
+    // employee.zipCode = this.zipCode.value;
+    // employee.role = this.role.value;
+    // employee.department = this.department.value;
+    // employee.skillSets = this.skillSets.value;
+    // employee.dateOfBirth = this.dateOfBirth.value;
+    // employee.dateOfJoining = this.dateOfJoining.value;
+    // employee.isActive = this.isActive.value;
+    const message = this.employeeService.addEmployee(employee);
+
   }
   saveItem(): void {
     console.log('this.addEmployee : ', this.addEmployee );

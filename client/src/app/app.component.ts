@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { IEmployeeApi } from './models/employee';
+import { IEmployeeApi } from './models/iemployee';
 
 @Component({
   selector: 'app-root',

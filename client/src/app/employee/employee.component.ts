@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { Router } from '@angular/router';
-import { IEmployee } from '../models/employee';
+import { IEmployee } from '../models/iemployee';
 import { EmployeeService } from './employee.service';
-import { IEmployeeApi } from './../models/employee';
+import { IEmployeeApi } from '../models/iemployee';
 import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
