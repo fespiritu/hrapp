@@ -2,20 +2,50 @@
 <div class="container">
   <div class="row">
       <div class="col-12 ml-auto">
-        <form>
+        <form [formGroup]="addEmployee" (ngSubmit)="onSubmitClick()">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="firstName">First Name</label>
-              <input type="text" class="form-control" id="firstName" formControlName="firstName">
+              <input type="text" required  class="form-control" id="firstName" formControlName="firstName">
+              <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="firstName.errors.required">
+                  First Name is required.
+                </div>
+                <div *ngIf="firstName.errors.maxlength">
+                  First Name has 30 characters max.
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-6">
               <label for="lastName">Last Name</label>
-              <input type="text" class="form-control" id="lastName" formControlName="lastName">
+              <input type="text" required class="form-control" id="lastName" formControlName="lastName">
+              <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="lastName.errors.required">
+                  Last Name is required.
+                </div>
+                <div *ngIf="lastName.errors.maxlength">
+                  Last Name has 30 characters max.
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="address1">Address</label>
-            <input type="text" class="form-control" id="address1" formControlName="address1" placeholder="1234 Main St">
+            <label for="address1">Address 1</label>
+            <input type="text" required class="form-control" id="address1" formControlName="address1" placeholder="1234 Main St">
+            <div *ngIf="address1.invalid && (address1.dirty || address1.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="address1.errors.required">
+                  Address1 is required.
+                </div>
+                <div *ngIf="address1.errors.maxlength">
+                  Address1 has 50 characters max.
+                </div>
+              </div>
           </div>
           <div class="form-group">
             <label for="address2">Address 2</label>
@@ -24,11 +54,21 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="city">City</label>
-              <input type="text" class="form-control" id="city" formControlName="city">
+              <input type="text" required class="form-control" id="city" formControlName="city">
+              <div *ngIf="city.invalid && (city.dirty || city.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="city.errors.required">
+                  City is required.
+                </div>
+                <div *ngIf="city.errors.maxlength">
+                  City has 60 characters max.
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-4">
               <label for="state">State</label>
-              <select id="state" class="form-control" formControlName="state">
+              <select id="state" required class="form-control" formControlName="state">
                 <option selected>Choose...</option>
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
@@ -82,25 +122,71 @@
                 <option value="WI">Wisconsin</option>
                 <option value="WY">Wyoming</option>
               </select>
+              <div *ngIf="state.invalid && (state.dirty || state.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="state.errors.required">
+                  State is required.
+                </div>
+                <div *ngIf="state.errors.maxlength">
+                  State needs 2 characters.
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-2">
               <label for="zipCode">Zip</label>
-              <input type="text" class="form-control" id="zipCode" formControlName="zipCode">
+              <input type="text" required class="form-control" id="zipCode" formControlName="zipCode">
+              <div *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="zipCode.errors.required">
+                  Zip Code required.
+                </div>
+                <div *ngIf="zipCode.errors.maxlength">
+                  Zip Code needs 15 characters max.
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="role">Role</label>
-              <input type="text" class="form-control" id="role" formControlName="role">
+              <input type="text" required class="form-control" id="role" formControlName="role">
+              <div *ngIf="role.invalid && (role.dirty || role.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="role.errors.required">
+                  Role is required.
+                </div>
+                <div *ngIf="role.errors.maxlength">
+                  Role needs 100 characters max.
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-6">
               <label for="department">Department</label>
-              <input type="text" class="form-control" id="department" formControlName="department">
+              <input type="text" required class="form-control" id="department" formControlName="department">
+              <div *ngIf="department.invalid && (department.dirty || department.touched)"
+                  class="alert alert-danger">
+
+                <div *ngIf="department.errors.required">
+                  Department is required.
+                </div>
+                <div *ngIf="department.errors.maxlength">
+                  Department needs 200 characters max.
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-group">
             <label for="skillSets">Skill Sets</label>
             <input type="text" class="form-control" id="skillSets" formControlName="skillSets" placeholder="Angular, .NET Core">
+            <div *ngIf="skillSets.invalid && (skillSets.dirty || skillSets.touched)"
+                class="alert alert-danger">
+              <div *ngIf="skillSets.errors.maxlength">
+                Skill Sets needs 1000 characters max.
+              </div>
+            </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -121,7 +207,8 @@
             </div>
           </div>
           <div  class="btn-group">
-            <button type="button" (click)="saveItem()" class="btn btn-primary">Save</button>
+            <!-- <button type="submit" (click)="saveItem()" class="btn btn-primary">Save</button> -->
+            <button type="submit"  class="btn btn-primary">Save</button>
             <button type="button" (click)="cancel()" class="btn btn-secondary">Cancel</button>
           </div>
         </form>
