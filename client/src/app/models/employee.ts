@@ -22,7 +22,7 @@ export interface IEmployee{
   Role: string;
   Department: string;
   SkillSets: string;
-  DateOfBirth: Date;
-  DateOfJoining: Date;
+  DateOfBirth: string;
+  DateOfJoining: string;
   IsActiveDisplay: string;
 };

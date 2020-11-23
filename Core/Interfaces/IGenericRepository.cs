@@ -8,5 +8,11 @@ namespace Core.Interfaces
     {
          Task<T> GetByIdAsync(int id);
          Task<IReadOnlyList<T>> ListAllAsync();
+        //  string Edit(T item);
+        void Delete(T item);
+
+        void Update(T item);
+        void Add(T item);
+        bool Save();
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.Data
 {
@@ -23,5 +24,25 @@ namespace Infrastructure.Data
     {
       return await _context.Set<T>().ToListAsync();
     }
+
+    public void Update(T item) {
+      _context.Update(item);
+    }
+    public void Add(T item) {
+      _context.Add(item);
+    }
+    public void Delete(T item) {
+      _context.Remove(item);
+    }
+
+    public bool Save() {
+      return _context.SaveChanges() >= 0;
+    }
+    // public T Edit(T item) {
+    //   return _context.Set<T>().Update(item);
+    // }
+    // public string Delete(int id) {
+
+    // }
   }
 }

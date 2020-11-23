@@ -16,8 +16,17 @@ export class EmployeeService {
 
   }
 
-  deleteEmployees(idCsv: string): string {
-    console.log('service deleteEmployees: ', idCsv);
-    return 'Hello';
+  addEmployee(): string {
+    console.log('service add: ');
+    return 'add';
+  }
+  editEmployee(id: string): string {
+    console.log('service edit: ', id);
+    return 'Edit';
+  }
+
+  deleteEmployee(id: string): string {
+    console.log('service deleteEmployees: ', id);
+    return 'Delete';
   }
 }
