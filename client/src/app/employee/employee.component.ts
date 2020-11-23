@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { formatDate } from '@angular/common';
+import { Router } from '@angular/router';
 import { IEmployee } from '../models/employee';
 import { EmployeeService } from './employee.service';
 import { IEmployeeApi } from './../models/employee';
@@ -29,7 +30,8 @@ export class EmployeeComponent implements OnInit {
 
   rowData!: IEmployee[]; // IEmployeeApi[];
 
-  constructor(private employeeService: EmployeeService) {
+  constructor(private employeeService: EmployeeService,
+    private router: Router) {
 
   }
 
@@ -82,15 +84,16 @@ export class EmployeeComponent implements OnInit {
     const selectedNodes = this.agGrid.api.getSelectedNodes();
     // console.log('freddie selectedNodes: ', selectedNodes);
     const selectedData = selectedNodes.map(node => node.data );
-    // console.log('freddie selectedData: ', selectedData);
-    const idCsv = selectedData.map(node => node.id).join(',');
+    console.log('freddie selectedData: ', selectedData);
+    const idCsv = selectedData.map(node => node.ID).join(',');
     return idCsv;
   }
 
   addItem(): void {
-    const selectedId = this.getSelectedRows();
-    const message = this.employeeService.addEmployee();
-    alert('Add message: ' + message);
+    this.router.navigateByUrl('addEmployee');
+    // const selectedId = this.getSelectedRows();
+    // const message = this.employeeService.addEmployee();
+    // alert('Add message: ' + message);
   }
 
   editItem(): void {
@@ -101,6 +104,7 @@ export class EmployeeComponent implements OnInit {
 
   deleteItem(): void {
     const selectedId = this.getSelectedRows();
+    console.log('delete selectedId: ', selectedId);
     const message = this.employeeService.deleteEmployee(selectedId);
     alert('Delete message: ' + message);
   }

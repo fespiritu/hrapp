@@ -38,11 +38,5 @@ namespace Infrastructure.Data
     public bool Save() {
       return _context.SaveChanges() >= 0;
     }
-    // public T Edit(T item) {
-    //   return _context.Set<T>().Update(item);
-    // }
-    // public string Delete(int id) {
-
-    // }
   }
 }

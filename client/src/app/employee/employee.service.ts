@@ -25,8 +25,11 @@ export class EmployeeService {
     return 'Edit';
   }
 
-  deleteEmployee(id: string): string {
+  deleteEmployee(id: string): void {
     console.log('service deleteEmployees: ', id);
-    return 'Delete';
+    const url = this.baseUrl + 'employees/' + id;
+    console.log('url: ', url);
+    this.http.delete(url);
+
   }
 }
