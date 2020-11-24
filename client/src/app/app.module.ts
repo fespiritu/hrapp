@@ -8,6 +8,7 @@ import { NavBarComponent } from './core/nav-bar/nav-bar.component';
 import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
 import { HomeComponent } from './home/home.component';
 import { EmployeeModule } from './employee/employee.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 // import { EmployeeAddComponent } from './employee-add/employee-add.component';
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { EmployeeModule } from './employee/employee.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    EmployeeModule
+    EmployeeModule,
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

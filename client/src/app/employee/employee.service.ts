@@ -19,7 +19,14 @@ export class EmployeeService {
 
   addEmployee(employee: Employee): any {
     console.log('service add: ', employee);
-    return this.http.post<any>(this.baseUrl + 'employees', employee);
+    return this.http.post<any>(this.baseUrl + 'employees', employee, { responseType: 'json', observe: 'response' });
+    // { responseType: 'json', observe: 'response' })
+    // .pipe(map(response => {
+    //   if (response) {
+    //     console.log('addEmployee response: ', response);
+    //   }
+    //   return response.body;
+    // }));
   }
   editEmployee(id: string): string {
     console.log('service edit: ', id);

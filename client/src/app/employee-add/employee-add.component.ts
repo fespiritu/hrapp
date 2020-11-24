@@ -12,9 +12,12 @@ import { Employee } from './../employee';
 export class EmployeeAddComponent implements OnInit {
 
   addEmployee!: FormGroup;
+  registerError: string;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
-              private employeeService: EmployeeService) { }
+              private employeeService: EmployeeService) {
+    this.registerError = '';
+  }
 
   ngOnInit(): void {
     this.addEmployee = new FormGroup({
@@ -51,23 +54,41 @@ export class EmployeeAddComponent implements OnInit {
   get isActive(): any { return this.addEmployee.get('isActive'); }
 
   onSubmitClick(): void {
-    // this.addEmployee['submitted'] = true;
-    console.log('this.addEmployee : ', this.addEmployee );
-    const employee = new Employee(
-      this.firstName.value,
-      this.lastName.value,
-       this.address1.value,
-      this.address2.value,
-      this.city.value,
-       this.state.value,
-      this.zipCode.value,
-      this.role.value,
-      this.department.value,
-      this.skillSets.value,
-      this.dateOfBirth.value,
-      this.dateOfJoining.value,
-      this.isActive.value
-    );
+    console.log('submit this.addEmployee: ', this.addEmployee);
+    //this.addEmployee.submitted = true;
+    if (this.addEmployee.valid) {
+      console.log('this.addEmployee : ', this.addEmployee );
+      const employee = this.addEmployee.value as Employee;
+      const message = this.employeeService.addEmployee(employee).subscribe(
+        (response: any) => {
+          console.log('submit response: ', response);
+          this.router.navigate(['employees']);
+        },
+        (error: any) => {
+          console.log(error);
+          this.registerError = 'Unable to submit changes';
+        });
+        console.log('submit message: ', message);
+      // const employee = new Employee(
+      //   this.firstName.value,
+      //   this.lastName.value,
+      //   this.address1.value,
+      //   this.address2.value,
+      //   this.city.value,
+      //   this.state.value,
+      //   this.zipCode.value,
+      //   this.role.value,
+      //   this.department.value,
+      //   this.skillSets.value,
+      //   this.dateOfBirth.value,
+      //   this.dateOfJoining.value,
+      //   this.isActive.value
+      // );
+    } else {
+      console.log('submit not valid');
+      this.validateAllFormFields(this.addEmployee);
+    }
+
     // employee.firstName = this.firstName.value;
     // employee.lastName = this.lastName.value;
     // employee.address1 = this.address1.value;
@@ -81,9 +102,21 @@ export class EmployeeAddComponent implements OnInit {
     // employee.dateOfBirth = this.dateOfBirth.value;
     // employee.dateOfJoining = this.dateOfJoining.value;
     // employee.isActive = this.isActive.value;
-    const message = this.employeeService.addEmployee(employee);
+
 
   }
+
+  validateAllFormFields(formGroup: FormGroup): void {         //{1}
+    Object.keys(formGroup.controls).forEach(field => {  //{2}
+      const control = formGroup.get(field);             //{3}
+      if (control instanceof FormControl) {             //{4}
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {        //{5}
+        this.validateAllFormFields(control);            //{6}
+      }
+    });
+  }
+
   saveItem(): void {
     console.log('this.addEmployee : ', this.addEmployee );
     alert('Save');
