@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { formatDate } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../employee/employee.service';
 import { Employee } from './../employee';
+import { IEmployeeApi } from './../models/iemployee';
 
 @Component({
   selector: 'app-employee-add',
@@ -11,16 +13,23 @@ import { Employee } from './../employee';
 })
 export class EmployeeAddComponent implements OnInit {
 
-  addEmployee!: FormGroup;
+  employeeForm!: FormGroup;
   registerError: string;
+  isEditMode!: boolean;
+  title!: string;
+  selectedId!: number;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
-              private employeeService: EmployeeService) {
+              private employeeService: EmployeeService,
+              private route: ActivatedRoute) {
     this.registerError = '';
   }
 
   ngOnInit(): void {
-    this.addEmployee = new FormGroup({
+    this.isEditMode = false;
+    this.selectedId = 0;
+    this.title = 'Add Employee';
+    this.employeeForm = this.formBuilder.group({
       firstName: new FormControl(null, [Validators.required, Validators.maxLength(30)]),
       lastName:  new FormControl(null, [Validators.required, Validators.maxLength(30)]),
       address1:  new FormControl(null, [Validators.required, Validators.maxLength(50)]),
@@ -31,100 +40,126 @@ export class EmployeeAddComponent implements OnInit {
       role:  new FormControl(null, [Validators.required, Validators.maxLength(100)]),
       department:  new FormControl(null, [Validators.required, Validators.maxLength(200)]),
       skillSets:  new FormControl(null, [Validators.maxLength(1000)]),
-      dateOfBirth:  new FormControl(null),
-      dateOfJoining:  new FormControl(null),
+      dateOfBirth: new FormControl(null),
+      dateOfJoining:  [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
       isActive:  new FormControl(true)
     });
 
-  }
-
-  get firstName(): any { return this.addEmployee.get('firstName'); }
-  get lastName(): any { return this.addEmployee.get('lastName'); }
-  get address1(): any { return this.addEmployee.get('address1'); }
-  get address2(): any { return this.addEmployee.get('address2'); }
-  get city(): any { return this.addEmployee.get('city'); }
-  get state(): any { return this.addEmployee.get('state'); }
-  get zipCode(): any { return this.addEmployee.get('zipCode'); }
-  get role(): any { return this.addEmployee.get('role'); }
-  get department(): any { return this.addEmployee.get('department'); }
-  get skillSets(): any { return this.addEmployee.get('skillSets'); }
-
-  get dateOfBirth(): any { return this.addEmployee.get('dateOfBirth'); }
-  get dateOfJoining(): any { return this.addEmployee.get('dateOfJoining'); }
-  get isActive(): any { return this.addEmployee.get('isActive'); }
-
-  onSubmitClick(): void {
-    console.log('submit this.addEmployee: ', this.addEmployee);
-    //this.addEmployee.submitted = true;
-    if (this.addEmployee.valid) {
-      console.log('this.addEmployee : ', this.addEmployee );
-      const employee = this.addEmployee.value as Employee;
-      const message = this.employeeService.addEmployee(employee).subscribe(
-        (response: any) => {
-          console.log('submit response: ', response);
-          this.router.navigate(['employees']);
-        },
-        (error: any) => {
-          console.log(error);
-          this.registerError = 'Unable to submit changes';
-        });
-        console.log('submit message: ', message);
-      // const employee = new Employee(
-      //   this.firstName.value,
-      //   this.lastName.value,
-      //   this.address1.value,
-      //   this.address2.value,
-      //   this.city.value,
-      //   this.state.value,
-      //   this.zipCode.value,
-      //   this.role.value,
-      //   this.department.value,
-      //   this.skillSets.value,
-      //   this.dateOfBirth.value,
-      //   this.dateOfJoining.value,
-      //   this.isActive.value
-      // );
-    } else {
-      console.log('submit not valid');
-      this.validateAllFormFields(this.addEmployee);
-    }
-
-    // employee.firstName = this.firstName.value;
-    // employee.lastName = this.lastName.value;
-    // employee.address1 = this.address1.value;
-    // employee.address2 = this.address2.value;
-    // employee.city = this.city.value;
-    // employee.state = this.state.value;
-    // employee.zipCode = this.zipCode.value;
-    // employee.role = this.role.value;
-    // employee.department = this.department.value;
-    // employee.skillSets = this.skillSets.value;
-    // employee.dateOfBirth = this.dateOfBirth.value;
-    // employee.dateOfJoining = this.dateOfJoining.value;
-    // employee.isActive = this.isActive.value;
-
-
-  }
-
-  validateAllFormFields(formGroup: FormGroup): void {         //{1}
-    Object.keys(formGroup.controls).forEach(field => {  //{2}
-      const control = formGroup.get(field);             //{3}
-      if (control instanceof FormControl) {             //{4}
-        control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof FormGroup) {        //{5}
-        this.validateAllFormFields(control);            //{6}
+    this.route.paramMap.subscribe(params => {
+      const empId = params.get('id');
+      if (empId) {
+        const id = Number(empId);
+        this.isEditMode = id > 0;
+        if (this.isEditMode) {
+          this.selectedId = id;
+          this.title = 'Edit Employee';
+        } else {
+          this.selectedId = 0;
+        }
+        this.getEmployee(id);
       }
     });
   }
 
-  saveItem(): void {
-    console.log('this.addEmployee : ', this.addEmployee );
-    alert('Save');
-    // this.router.navigateByUrl('employees');
+  get firstName(): any { return this.employeeForm.get('firstName'); }
+  get lastName(): any { return this.employeeForm.get('lastName'); }
+  get address1(): any { return this.employeeForm.get('address1'); }
+  get address2(): any { return this.employeeForm.get('address2'); }
+  get city(): any { return this.employeeForm.get('city'); }
+  get state(): any { return this.employeeForm.get('state'); }
+  get zipCode(): any { return this.employeeForm.get('zipCode'); }
+  get role(): any { return this.employeeForm.get('role'); }
+  get department(): any { return this.employeeForm.get('department'); }
+  get skillSets(): any { return this.employeeForm.get('skillSets'); }
+
+  get dateOfBirth(): any { return this.employeeForm.get('dateOfBirth'); }
+  get dateOfJoining(): any { return this.employeeForm.get('dateOfJoining'); }
+  get isActive(): any { return this.employeeForm.get('isActive'); }
+
+  onSubmitClick(): void {
+    console.log('submit this.employeeForm: ', this.employeeForm);
+    if (this.employeeForm.valid) {
+      console.log('this.employeeForm : ', this.employeeForm );
+      const employee = this.employeeForm.value as Employee;
+      if (this.isEditMode) {
+        // Edit mode
+        employee.id = this.selectedId;
+        this.putEmployee(employee);
+      } else {
+        // Add mode
+        this.postEmployee(employee);
+      }
+    } else {
+      console.log('submit not valid');
+      this.validateAllFormFields(this.employeeForm);
+    }
   }
 
+  putEmployee(employee: Employee): void {
+    const message = this.employeeService.putEmployee(employee).subscribe(
+      (response: any) => {
+        console.log('submit response: ', response);
+        this.router.navigate(['employees']);
+      },
+      (error: any) => {
+        console.log(error);
+        this.registerError = 'Unable to submit changes';
+      });
+  }
+
+  postEmployee(employee: Employee): void {
+    const message = this.employeeService.postEmployee(employee).subscribe(
+      (response: any) => {
+        console.log('submit response: ', response);
+        this.router.navigate(['employees']);
+      },
+      (error: any) => {
+        console.log(error);
+        this.registerError = 'Unable to submit changes';
+      });
+  }
+
+  // Go thru each field and activate its validation(touched)
+  validateAllFormFields(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
+  }
+
+  getEmployee(id: number): void {
+    this.employeeService.getEmployee(id).subscribe(
+      (employee: IEmployeeApi) => this.editEmployee(employee),
+      (err: any) => console.log(err)
+    );
+  }
+
+  // When setting dates, use this format: 'yyyy-MM-dd'
+  editEmployee(emp: IEmployeeApi): void {
+    console.log('editEmployee: ', emp);
+    this.employeeForm.patchValue({
+      firstName: emp.firstName,
+      lastName:  emp.lastName,
+      address1:  emp.address1,
+      address2:  emp.address2,
+      city: emp.city,
+      state: emp.state,
+      zipCode: emp.zipCode,
+      role: emp.role,
+      department: emp.department,
+      skillSets: emp.skillSets,
+      dateOfBirth: formatDate(emp.dateOfBirth, 'yyyy-MM-dd', 'en'),
+      dateOfJoining: formatDate(emp.dateOfJoining, 'yyyy-MM-dd', 'en'),
+      isActive: emp.isActive
+    });
+
+    console.log('editEmployee this.employeeForm: ', this.employeeForm.value);
+  }
   cancel(): void {
-   // this.router.navigateByUrl('addEmployee');
    this.router.navigateByUrl('employees');
   }
 }

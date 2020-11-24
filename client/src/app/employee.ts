@@ -1,4 +1,5 @@
 export class Employee {
+  id: number;
   firstName: string;
   lastName: string;
   address1: string;
@@ -13,20 +14,23 @@ export class Employee {
   dateOfJoining: string;
   isActive: boolean;
 
-  constructor(firstName: string,
-              lastName: string,
-              address1: string,
-              address2: string,
-              city: string,
-              state: string,
-              zipCode: string,
-              role: string,
-              department: string,
-              skillSets: string,
-              dateOfBirth: string,
-              dateOfJoining: string,
-              isActive: boolean = true)
+  constructor(
+      id: number,
+      firstName: string,
+      lastName: string,
+      address1: string,
+      address2: string,
+      city: string,
+      state: string,
+      zipCode: string,
+      role: string,
+      department: string,
+      skillSets: string,
+      dateOfBirth: string,
+      dateOfJoining: string,
+      isActive: boolean = true)
     {
+      this.id = id;
       this.firstName = firstName;
       this.lastName = lastName;
       this.address1 = address1;
