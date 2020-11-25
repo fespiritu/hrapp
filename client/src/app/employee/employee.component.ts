@@ -31,7 +31,7 @@ export class EmployeeComponent implements OnInit {
   selectedId!: number;
   modalRef!: BsModalRef;
   informMessage!: string;
-  isMessageModalShown: boolean;
+  // isMessageModalShown: boolean;
 
   constructor(private employeeService: EmployeeService,
               private modalService: BsModalService) {
@@ -41,7 +41,7 @@ export class EmployeeComponent implements OnInit {
   ngOnInit(): void {
     this.selectedId = 0;
     this.informMessage = '';
-    this.isMessageModalShown = false;
+    // this.isMessageModalShown = false;
     this.employeeService.getEmployees().subscribe(response => {
       console.log('response: ', response);
       this.isRowSelected = false;
@@ -151,7 +151,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   decline(): void {
-    this.isMessageModalShown = false;
+    // this.isMessageModalShown = false;
     this.modalRef.hide();
   }
 
