@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { EmployeeService } from '../employee/employee.service';
 import { Employee } from './../employee';
 import { IEmployeeApi } from './../models/iemployee';
@@ -18,10 +19,13 @@ export class EmployeeAddComponent implements OnInit {
   isEditMode!: boolean;
   title!: string;
   selectedId!: number;
+  modalRef!: BsModalRef;
+  isMessageModalShown!: boolean;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
               private employeeService: EmployeeService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private modalService: BsModalService) {
     this.registerError = '';
   }
 
@@ -29,6 +33,7 @@ export class EmployeeAddComponent implements OnInit {
     this.isEditMode = false;
     this.selectedId = 0;
     this.title = 'Add Employee';
+    this.isMessageModalShown = false;
     this.employeeForm = this.formBuilder.group({
       firstName: new FormControl(null, [Validators.required, Validators.maxLength(30)]),
       lastName:  new FormControl(null, [Validators.required, Validators.maxLength(30)]),
@@ -40,8 +45,9 @@ export class EmployeeAddComponent implements OnInit {
       role:  new FormControl(null, [Validators.required, Validators.maxLength(100)]),
       department:  new FormControl(null, [Validators.required, Validators.maxLength(200)]),
       skillSets:  new FormControl(null, [Validators.maxLength(1000)]),
-      dateOfBirth: new FormControl(null),
-      dateOfJoining:  [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
+      dateOfBirth: new FormControl(null, [Validators.required]),
+      dateOfJoining: new FormControl(null, [Validators.required]),
+      // dateOfJoining:  [formatDate(new Date(), 'yyyy-MM-dd', 'en')],
       isActive:  new FormControl(true)
     });
 
@@ -101,9 +107,11 @@ export class EmployeeAddComponent implements OnInit {
         console.log('submit response: ', response);
         this.router.navigate(['employees']);
       },
-      (error: any) => {
-        console.log(error);
-        this.registerError = 'Unable to submit changes';
+      (err: any) => {
+        const msg = `Error in saving record. (Status ${err.status}): ${err.statusText}`;
+        console.log('putEmployee err: ', err);
+        alert(msg);
+        // this.router.navigateByUrl('employees');
       });
   }
 
@@ -113,9 +121,11 @@ export class EmployeeAddComponent implements OnInit {
         console.log('submit response: ', response);
         this.router.navigate(['employees']);
       },
-      (error: any) => {
-        console.log(error);
-        this.registerError = 'Unable to submit changes';
+      (err: any) => {
+        const msg = `Error in saving record. (Status ${err.status}): ${err.statusText}`;
+        console.log('postEmployee err: ', err);
+        alert(msg);
+        // this.router.navigateByUrl('employees');
       });
   }
 
@@ -134,7 +144,12 @@ export class EmployeeAddComponent implements OnInit {
   getEmployee(id: number): void {
     this.employeeService.getEmployee(id).subscribe(
       (employee: IEmployeeApi) => this.editEmployee(employee),
-      (err: any) => console.log(err)
+      (err: any) => {
+        const msg = `Error in getting records. (Status ${err.status}): ${err.statusText}`;
+        console.log('Get Employee err: ', err);
+        alert(msg);
+        this.router.navigateByUrl('employees');
+      }
     );
   }
 
@@ -161,5 +176,20 @@ export class EmployeeAddComponent implements OnInit {
   }
   cancel(): void {
    this.router.navigateByUrl('employees');
+  }
+
+  openModal(template: TemplateRef<any>): void {
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  confirm(): void {
+    this.modalRef.hide();
+    console.log('Saving...');
+    this.onSubmitClick();
+  }
+
+  decline(): void {
+    this.isMessageModalShown = false;
+    this.modalRef.hide();
   }
 }

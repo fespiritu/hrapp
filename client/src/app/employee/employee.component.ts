@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { IEmployee } from '../models/iemployee';
 import { EmployeeService } from './employee.service';
-import { IEmployeeApi } from '../models/iemployee';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
@@ -29,13 +29,19 @@ export class EmployeeComponent implements OnInit {
   rowData!: IEmployee[];
   isRowSelected!: boolean;
   selectedId!: number;
+  modalRef!: BsModalRef;
+  informMessage!: string;
+  isMessageModalShown: boolean;
 
-  constructor(private employeeService: EmployeeService) {
+  constructor(private employeeService: EmployeeService,
+              private modalService: BsModalService) {
 
   }
 
   ngOnInit(): void {
     this.selectedId = 0;
+    this.informMessage = '';
+    this.isMessageModalShown = false;
     this.employeeService.getEmployees().subscribe(response => {
       console.log('response: ', response);
       this.isRowSelected = false;
@@ -124,10 +130,29 @@ export class EmployeeComponent implements OnInit {
     const message = this.employeeService.deleteEmployee(this.selectedId)
       .subscribe(
         () => this.removeRows(),
-        (err: any) => console.log('Delete err: ', err)
+        (err: any) => {
+          const msg = `Error in deleting record. (Status ${err.status}): ${err.statusText}`;
+          this.informMessage = msg;
+          console.log('Delete err: ', err);
+          // this.isMessageModalShown = true;
+          alert(msg);
+        }
       );
+  }
 
-    alert('Deleted');
+  openModal(template: TemplateRef<any>): void {
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  confirm(): void {
+    this.modalRef.hide();
+    console.log('Deleting...');
+    this.deleteItem();
+  }
+
+  decline(): void {
+    this.isMessageModalShown = false;
+    this.modalRef.hide();
   }
 
 }
