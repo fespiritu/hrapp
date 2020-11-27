@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { IEmployeeApi } from '../models/iemployee';
 import { Observable } from 'rxjs';
 import { Employee } from './../employee';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  baseUrl = 'https://localhost:5001/api';
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient,
               private router: Router) { }

@@ -71,10 +71,15 @@ namespace API
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
-
+            var origins = new string[] {
+                "https://localhost:3000",
+                "https://localhost:5001",
+                "http://23.99.9.63/",
+                "https://23.99.9.63/"
+            };
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy", policy => {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000");
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(origins);
                 });
             });
         }
